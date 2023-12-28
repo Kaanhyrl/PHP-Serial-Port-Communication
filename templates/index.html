@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Seri Port Dinleyici</title>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.1/socket.io.js"></script>
+</head>
+<body>
+    
+    <h1>Seri Port Dinleyici</h1>
+    <h2>Seçilen Port: {{ selected_port }}</h2>
+    <button onclick="getPorts()">Portları Listele</button>
+    <br><br>
+    <select id="portList">
+        <!-- Seçenekler burada oluşturulacak -->
+    </select>
+    <button onclick="connect()">Bağlan</button>
+    <button onclick="disconnect()">Bağlantıyı Kes</button>
+
+    <h3>Gelen Veriler:</h3>
+    <div id="receivedData"></div>
+
+    <script>
+        function getPorts() {
+            fetch('/get_ports')
+                .then(response => response.json())
+                .then(data => {
+                    const portList = document.getElementById('portList');
+                    portList.innerHTML = '';
+                    data.forEach(port => {
+                        const option = document.createElement('option');
+                        option.text = port;
+                        portList.add(option);
+                    });
+                });
+        }
+
+        function connect() {
+            const selectedPort = document.getElementById('portList').value;
+            fetch('/connect', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ port: selectedPort }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                   
+                } else {
+                    alert('Bağlantı hatası: ' + data.error);
+                }
+            });
+        }
+
+        function disconnect() {
+            fetch('/disconnect', { method: 'POST' })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    
+                } else {
+                    alert('Bağlantı kesme hatası: ' + data.error);
+                }
+            });
+        }
+
+        // WebSocket kullanarak verileri dinleyelim
+       
+    // WebSocket kullanarak verileri dinleyelim
+    var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+    socket.on('data', function(data) {
+        // Seri porttan gelen verileri burada işleyin
+        console.log('Gelen veri:', data);
+        var receivedDataDiv = document.getElementById('receivedData');
+        receivedDataDiv.innerHTML += '<p>' + data + '</p>'; // Gelen veriyi paragraf içine ekliyoruz
+    });
+
+    </script>
+<!-- Flask-SocketIO istemci kütüphanesi -->
+<script src="/socket.io/socket.io.js"></script>
+<!-- Socket.IO istemci kütüphanesi CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.1/socket.io.js"></script>
+<!-- Socket.IO istemci kütüphanesi -->
+
+
+</body>
+</html>
