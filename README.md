@@ -1,3 +1,2 @@
 # Serial-Port-Communication
 Serial Port Communication WEB SİTE
-With SX126x lora chips, rssi value can be taken and a mesh network can be established, and thanks to features such as creating hidden network structures in the chips and connecting repeaters, sensor data is sent to the center via RF, and the data is sent to end users, that is, desktop or web applications, through the serial port connected to the computer by the MCU in the center. In my code here, I turn the serial port communication with PHP, which enables this to reach the end users, that is, the web part, into a website and present it to the user.
